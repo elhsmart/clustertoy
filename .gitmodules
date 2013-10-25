@@ -1,0 +1,27 @@
+[submodule "chef/cookbooks/apt"]
+	path = chef/cookbooks/apt
+	url = git@github.com:elhsmart/apt.git
+[submodule "chef/cookbooks/nginx"]
+	path = chef/cookbooks/nginx
+	url = git@github.com:elhsmart/nginx.git
+[submodule "chef/cookbooks/bluepill"]
+	path = chef/cookbooks/bluepill
+	url = git@github.com:elhsmart/bluepill.git
+[submodule "chef/cookbooks/build-essential"]
+	path = chef/cookbooks/build-essential
+	url = git@github.com:elhsmart/build-essential.git
+[submodule "chef/cookbooks/yum"]
+	path = chef/cookbooks/yum
+	url = git@github.com:elhsmart/yum.git
+[submodule "chef/cookbooks/runit"]
+	path = chef/cookbooks/runit
+	url = git@github.com:elhsmart/runit.git
+[submodule "chef/cookbooks/ohai"]
+	path = chef/cookbooks/ohai
+	url = git@github.com:elhsmart/ohai.git
+[submodule "chef-repo"]
+	path = chef-repo
+	url = git@github.com:elhsmart/chef-repo.git
+[submodule "chef/cookbooks/rsyslog"]
+	path = chef/cookbooks/rsyslog
+	url = git@github.com:elhsmart/rsyslog.git

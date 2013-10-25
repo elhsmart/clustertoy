@@ -1,0 +1,9 @@
+*.gitfolder
+Vagrantfile
+.vagrant*
+utils/lib/*
+utils/bin/*
+utils/include/*
+.DS*
+.Python
+Clusterconf.yaml

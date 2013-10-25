@@ -1,0 +1,127 @@
+#!/usr/bin/env python
+import os
+
+utils_path 	= os.path.dirname(os.path.realpath(__file__)) + os.sep + ".." ;
+virtualenv 	= utils_path + os.sep + "bin" + os.sep + 'activate_this.py'
+conf_file	= "Clusterconf.yaml"
+conf_path	= os.path.join(utils_path, "..", conf_file)
+execfile(virtualenv, dict(__file__=virtualenv))
+
+import pystache, pyaml, getopt, sys, pprint, yaml
+from socket import inet_aton
+from struct import unpack
+from netaddr import *
+
+helpstring 	= 'USAGE: manage <ACTION>[--add|--remove|--up|--list] <ROLE>[balancer|app|db|storage]'
+
+def main(argv):
+	role = ""
+
+	try:		
+		opts, args = getopt.getopt(argv, "a:r:w:", ["add", "remove", "write", "list"])
+   	except getopt.GetoptError:
+   		print helpstring
+   		sys.exit(2)
+
+   	action 	= ''
+   	if len(args) > 0:
+   		role = args.pop(0)
+
+	for opt, arg in opts:
+		if opt == '--add':
+			action 	= "add"
+		elif opt == "--remove":
+			action 	= "remove"
+		elif opt == "--up":
+			action 	= "up"
+		elif opt == "--list":
+			action 	= "list"
+		else:
+			print helpstring
+			sys.exit()
+
+	return [action, role]
+
+def getFreeIPs(poolstring, nodes):
+	[poolstart, poolend] = poolstring.split(" - ", 2)
+	ips = set(iter_iprange(poolstart, poolend))
+	owned = []
+	for node in nodes:
+		owned.append(IPAddress(node['ip']))
+	ips = ips - set(owned)
+	return list(ips)
+
+def addNode(roleName):
+	print "Adding node with role: "+roleName
+
+	config 		= yaml.load(open(conf_path, "r").read())
+	free_ips  	= getFreeIPs(config['ip_pool'], config['nodes'])
+	if(len(free_ips) == 0):
+		print "Sorry, no free ips available. Please extend pool"
+		sys.exit(1)
+	free_ip 	= str(free_ips.pop())
+
+	print "Free IP: "+free_ip
+	#roles node list
+	active_nodes = []
+	for node in config['nodes']:
+		if node['role'] == roleName:
+			active_nodes.append(node)
+
+	new_node = {
+		"ip": free_ip,
+		"name": roleName+"_"+str(len(active_nodes)+1),
+		"role": roleName
+	}
+
+	config['nodes'].append(new_node)
+
+	stream = file(conf_path, 'w')
+	yaml.dump(config, stream)
+
+	print "New node with IP "+free_ip+" and name "+new_node['name']+" added."
+	return True
+
+def removeNode(name):
+	print "Removing node with role "+name
+	return True
+
+def upNode(name):
+	print "Starting node "+name
+	return True
+
+def listNodes():
+	print "Dump config"
+	config = yaml.load(open(conf_path, "r").read())
+	print yaml.dump(config)
+
+	return True	
+
+def ip2long(ip_addr):
+    return unpack("!L", inet_aton(ip_addr))[0]
+
+if os.path.exists(conf_path) == False:
+	print helpstring
+	print "Sorry, Clusterconf.yaml file not found. Did you copy it from default config?"
+	sys.exit(1)
+
+try:
+	if __name__ == "__main__":
+		action, role = main(sys.argv[1:])
+except TypeError as e:
+	print helpstring
+	sys.exit()
+
+if role == "" and action != "list":
+	print helpstring
+	print "Sorry, node role/name nust be provided"
+	sys.exit()
+
+if action == "add":
+	addNode(role)
+elif action == "remove":
+	removeNode(role)
+elif action == "up":
+	upNode(role)
+elif action == "list":
+	listNodes()
