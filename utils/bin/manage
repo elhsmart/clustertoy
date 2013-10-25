@@ -82,8 +82,25 @@ def addNode(roleName):
 	print "New node with IP "+free_ip+" and name "+new_node['name']+" added."
 	return True
 
-def removeNode(name):
-	print "Removing node with role "+name
+def removeNode(roleName):
+	print "Removing node with role "+roleName
+	removed = False
+	config 	= yaml.load(open(conf_path, "r").read())
+	for node in config['nodes']:
+		if node['role'] == roleName:
+			i = config['nodes'].index(node)
+			del config['nodes'][i]
+			removed = True
+			break
+
+	if removed == False:
+		print "Nothing to delete"
+		sys.exit(1)
+
+	stream = file(conf_path, 'w')
+	yaml.dump(config, stream)
+
+	print "Removed node with IP "+node['ip']+" and name "+node['name']
 	return True
 
 def upNode(name):
