@@ -1,0 +1,1 @@
+1. Create new Clusterconf.yaml ( just copy Clusterconf.yaml.default and adjust ip range )
