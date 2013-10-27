@@ -79,8 +79,8 @@ def addNode(roleName):
 
 	config['nodes'].append(new_node)
 
-	#stream = file(conf_path, 'w')
-	#yaml.dump(config, stream)
+	stream = file(conf_path, 'w')
+	yaml.dump(config, stream)
 
 	print "New node with IP "+free_ip+" and name "+new_node['name']+" added."
 	print "Generating new Vagrantfile"
@@ -119,7 +119,9 @@ def upNode(name):
 def listNodes():
 	print "Dump config"
 	config = yaml.load(open(conf_path, "r").read())
-	print yaml.dump(config)
+	vagrant_config = generateVagrantConfig(config)
+	stream = file(vagrant_path, 'w')
+	stream.write(vagrant_config)
 
 	return True	
 
@@ -132,6 +134,7 @@ if os.path.exists(conf_path) == False:
 	sys.exit(1)
 
 def generateVagrantConfig(config):
+	binhost			= False
 	tpl_path 		= os.path.abspath(utils_path+os.sep+"templates")
 	tpl_filename 	= tpl_path+os.sep+"Vagrantfile.tpl";
 	tpl_string 		= unicode(open(tpl_filename, "r").read(), 'UTF-8');
@@ -141,6 +144,23 @@ def generateVagrantConfig(config):
 
 	config['chef_cookbook_path'] = os.path.abspath(os.path.join(utils_path, "..", "chef", "cookbooks"))
 	config['chef_roles_path'] = os.path.abspath(os.path.join(utils_path, "..", "chef", "roles"))
+
+
+	if "domain" in config:
+		for node in config['nodes']:
+			node_index = config['nodes'].index(node)
+			config['nodes'][node_index]['fqdn'] = ".".join([node['name'], config['domain']])
+
+	for node in config['nodes']:
+		if node['role'] == "binhost":
+			binhost = node;
+			break;
+
+	if binhost:
+		for node in config['nodes']:
+			if node['role'] != "binhost":
+				node_index = config['nodes'].index(node)
+				config['nodes'][node_index]['binhost'] = "http://" + ":".join([binhost['ip'], '8080'])
 
 	result = pystache.render(parsedTemplate, config);
 

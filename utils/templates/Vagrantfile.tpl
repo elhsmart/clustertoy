@@ -16,8 +16,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       chef.add_role("{{role}}")
       chef.json = {
         "net" => {
-          "hostname" => "{{name}}"
-        }
+          "hostname" => "{{name}}"{{#fqdn}},
+          "fqdn" => "{{fqdn}}"{{/fqdn}}
+        }{{#binhost}},
+        "binary-package-client" => {
+          "host" => "{{binhost}}"
+        }{{/binhost}}
       }
     end
   end

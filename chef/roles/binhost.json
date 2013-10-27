@@ -1,0 +1,11 @@
+{
+    "name":"binhost",
+    "chef_type": "role",
+    "description":"Binary host server in clustertoy",
+    "json_class": "Chef::Role",
+    "run_list": [
+        "recipe[hostname]",
+        "recipe[binaryhost]",
+        "recipe[ntp]"
+    ]
+}
