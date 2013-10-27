@@ -1,0 +1,10 @@
+server {
+  listen <%= @listen_host %>:<%= @listen_port %>;
+
+  error_log 	<%= @log_dir %>/binary_host.error.log;
+  access_log 	<%= @log_dir %>/binary_host.access.log;
+
+  location / {
+    root <%= @root_dir %>;
+  }
+}
