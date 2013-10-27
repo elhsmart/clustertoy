@@ -31,3 +31,9 @@
 [submodule "chef/cookbooks/hostsfile"]
 	path = chef/cookbooks/hostsfile
 	url = git@github.com:elhsmart/hostsfile.git
+[submodule "chef/cookbooks/ntp"]
+	path = chef/cookbooks/ntp
+	url = git@github.com:elhsmart/ntp.git
+[submodule "chef/cookbooks/binaryhost"]
+	path = chef/cookbooks/binaryhost
+	url = git@github.com:elhsmart/binary-package-host.git

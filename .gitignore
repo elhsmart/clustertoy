@@ -7,3 +7,4 @@ utils/include/*
 .DS*
 .Python
 Clusterconf.yaml
+.idea/*
