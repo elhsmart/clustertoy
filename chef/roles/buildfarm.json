@@ -1,0 +1,15 @@
+{
+    "name":"buildfarm",
+    "chef_type": "role",
+    "description": "Host with binpackages sfor clustertoy / Gentoo binary package server",
+    "json_class": "Chef::Role",
+    "run_list": [
+        "recipe[nginx]",
+        "recipe[binhost]"
+        "recipe[php-fpm]",
+        "recipe[memcache]",
+        "recipe[beanstalkd]",
+        "recipe[mysql]",
+        "recipe[ceph]",
+    ]
+}

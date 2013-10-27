@@ -1,0 +1,6 @@
+{
+    "name":"storage",
+    "chef_type": "role",
+    "description":"Storage server in clustertoy",
+    "json_class": "Chef::Role"
+}

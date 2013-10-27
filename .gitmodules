@@ -25,3 +25,9 @@
 [submodule "chef/cookbooks/rsyslog"]
 	path = chef/cookbooks/rsyslog
 	url = git@github.com:elhsmart/rsyslog.git
+[submodule "chef/cookbooks/hostname"]
+	path = chef/cookbooks/hostname
+	url = git@github.com:elhsmart/chef-hostname.git
+[submodule "chef/cookbooks/hostsfile"]
+	path = chef/cookbooks/hostsfile
+	url = git@github.com:elhsmart/hostsfile.git

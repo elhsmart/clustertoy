@@ -1,0 +1,9 @@
+{
+    "name":"balancer",
+    "chef_type": "role",
+    "description":"Balancer server in clustertoy",
+    "json_class": "Chef::Role",
+    "run_list": [
+        "recipe[hostname]"
+    ]    
+}

@@ -14,6 +14,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       chef.cookbooks_path = "{{chef_cookbook_path}}"
       chef.roles_path = "{{chef_roles_path}}"
       chef.add_role("{{role}}")
+      chef.json = {
+        "net" => {
+          "hostname" => "{{name}}"
+        }
+      }
     end
   end
 

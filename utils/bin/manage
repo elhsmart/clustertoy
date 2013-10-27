@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import os
 
-utils_path 	= os.path.dirname(os.path.realpath(__file__)) + os.sep + ".." ;
-virtualenv 	= utils_path + os.sep + "bin" + os.sep + 'activate_this.py'
-conf_file	= "Clusterconf.yaml"
-conf_path	= os.path.join(utils_path, "..", conf_file)
+utils_path 		= os.path.dirname(os.path.realpath(__file__)) + os.sep + ".." ;
+virtualenv 		= utils_path + os.sep + "bin" + os.sep + 'activate_this.py'
+conf_file		= "Clusterconf.yaml"
+conf_path		= os.path.join(utils_path, "..", conf_file)
+vagrant_file	= "Vagrantfile"
+vagrant_path	= os.path.join(utils_path, "..", vagrant_file)
+
 execfile(virtualenv, dict(__file__=virtualenv))
 
 import pystache, pyaml, getopt, sys, pprint, yaml
@@ -76,10 +79,16 @@ def addNode(roleName):
 
 	config['nodes'].append(new_node)
 
-	stream = file(conf_path, 'w')
-	yaml.dump(config, stream)
+	#stream = file(conf_path, 'w')
+	#yaml.dump(config, stream)
 
 	print "New node with IP "+free_ip+" and name "+new_node['name']+" added."
+	print "Generating new Vagrantfile"
+
+	vagrant_config = generateVagrantConfig(config)
+	stream = file(vagrant_path, 'w')
+	stream.write(vagrant_config)
+
 	return True
 
 def removeNode(roleName):
@@ -121,6 +130,21 @@ if os.path.exists(conf_path) == False:
 	print helpstring
 	print "Sorry, Clusterconf.yaml file not found. Did you copy it from default config?"
 	sys.exit(1)
+
+def generateVagrantConfig(config):
+	tpl_path 		= os.path.abspath(utils_path+os.sep+"templates")
+	tpl_filename 	= tpl_path+os.sep+"Vagrantfile.tpl";
+	tpl_string 		= unicode(open(tpl_filename, "r").read(), 'UTF-8');
+	parsedTemplate	= pystache.parse(tpl_string);
+	
+	pprint.pprint(config)
+
+	config['chef_cookbook_path'] = os.path.abspath(os.path.join(utils_path, "..", "chef", "cookbooks"))
+	config['chef_roles_path'] = os.path.abspath(os.path.join(utils_path, "..", "chef", "roles"))
+
+	result = pystache.render(parsedTemplate, config);
+
+	return result
 
 try:
 	if __name__ == "__main__":

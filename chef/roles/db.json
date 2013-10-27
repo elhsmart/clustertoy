@@ -1,0 +1,6 @@
+{
+    "name":"db",
+    "chef_type": "role",
+    "description":"DB server in clustertoy",
+    "json_class": "Chef::Role"
+}

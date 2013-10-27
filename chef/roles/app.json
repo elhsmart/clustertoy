@@ -1,0 +1,12 @@
+{
+    "name":"app",
+    "chef_type": "role",
+    "description": "App server in clustertoy",
+    "json_class": "Chef::Role",
+    "run_list": [
+        "recipe[nginx]",
+        "recipe[php-fpm]",
+        "recipe[memcache]",
+        "recipe[beanstalkd]"
+    ]
+}
